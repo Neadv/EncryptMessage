@@ -27,6 +27,7 @@ namespace EncryptMessage
             services.AddControllersWithViews();
 
             services.AddDbContext<DataContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IMessageRepository, EFMessageRepository>();
 
             services.AddTransient<IMessageEncryptor, AesEncryptor>();
         }

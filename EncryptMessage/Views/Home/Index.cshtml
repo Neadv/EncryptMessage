@@ -1,14 +1,16 @@
-﻿<div class="card m-2">
+﻿@model MessageViewModel
+
+<div class="card m-2">
     <div class="card-body">
         <h5 class="card-title">Create a secret message</h5>
-        <form class="form">
+        <form asp-action="Index" method="post">
             <div class="form-group">
-                <label for="Message">Message:</label>
-                <textarea class="form-control" name="Message" id="Message" placeholder="Enter a message"></textarea>
+                <label asp-for="Message"></label>
+                <textarea class="form-control" asp-for="Message" placeholder="Enter a message"></textarea>
             </div>
             <div class="form-group">
-                <label for="Key">Secret Key:</label>
-                <input type="text" class="form-control" placeholder="Enter a secret key">
+                <label asp-for="Key">Secret Key:</label>
+                <input class="form-control" asp-for="Key" placeholder="Enter a secret key">
             </div>
             <button class="btn btn-primary" type="submit">Submit</button>
         </form>
