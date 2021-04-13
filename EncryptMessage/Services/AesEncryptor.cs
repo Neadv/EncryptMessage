@@ -49,6 +49,8 @@ namespace EncryptMessage.Models
 
         public string DecryptMessage(Message message, string key)
         {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
             if (message.Value == null || message.Value.Length == 0)
                 throw new ArgumentNullException(nameof(message.Value));
             if (message.IV == null || message.IV.Length == 0)
@@ -66,16 +68,23 @@ namespace EncryptMessage.Models
                     aesAlg.IV = message.IV;
                     ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                    using (MemoryStream msDecrypt = new MemoryStream(message.Value))
+                    try
                     {
-                        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                        using (MemoryStream msDecrypt = new MemoryStream(message.Value))
                         {
-                            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                            using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                             {
+                                using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                                {
 
-                                plaintext = srDecrypt.ReadToEnd();
+                                    plaintext = srDecrypt.ReadToEnd();
+                                }
                             }
                         }
+                    }
+                    catch (CryptographicException)
+                    {
+                        plaintext = null;
                     }
                 }
             }
