@@ -51,7 +51,7 @@ namespace EncryptMessage
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute("default", "/{action=Create}/{id?}", new { Controller = "Home"} );
             });
         }
     }
