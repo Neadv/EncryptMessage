@@ -13,6 +13,6 @@ namespace EncryptMessage.Models
 
         Task UpdateMessageAsync(Message message);
 
-        Task<Message> FindByIdAsync(string id);
+        Task<Message> FindByCodeAsync(string id);
     }
 }

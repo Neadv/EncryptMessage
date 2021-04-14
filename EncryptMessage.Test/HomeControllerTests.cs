@@ -35,7 +35,7 @@ namespace EncryptMessage.Test
             var mockEncryptor = new Mock<IMessageEncryptor>();
             var mockRepository = new Mock<IMessageRepository>();
 
-            Message message = new Message { Id = "123456" };
+            Message message = new Message { Code = "123456" };
             MessageViewModel viewModel = new MessageViewModel { Key = "Key", Message = "Message" };
 
             mockEncryptor.Setup(e => e.EncryptMessage(viewModel.Message, viewModel.Key)).Returns(message);
@@ -57,7 +57,7 @@ namespace EncryptMessage.Test
             // Arrange
             string existingCode = "123456";
             var mockRepository = new Mock<IMessageRepository>();
-            mockRepository.Setup(r => r.FindByIdAsync(existingCode)).Returns(Task.FromResult(new Message()));
+            mockRepository.Setup(r => r.FindByCodeAsync(existingCode)).Returns(Task.FromResult(new Message()));
             HomeController controller = new HomeController(null, mockRepository.Object);
 
             // Act
@@ -71,8 +71,8 @@ namespace EncryptMessage.Test
             Assert.NotNull(resultRedirect);
             Assert.Equal(existingCode, vm.Code);
             Assert.Equal("Create", resultRedirect.ActionName);
-            mockRepository.Verify(r => r.FindByIdAsync(existingCode), Times.Once());
-            mockRepository.Verify(r => r.FindByIdAsync(It.IsAny<string>()), Times.Exactly(2));
+            mockRepository.Verify(r => r.FindByCodeAsync(existingCode), Times.Once());
+            mockRepository.Verify(r => r.FindByCodeAsync(It.IsAny<string>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace EncryptMessage.Test
             var mockEncryptor = new Mock<IMessageEncryptor>();
             var mockRepository = new Mock<IMessageRepository>();
             mockEncryptor.Setup(e => e.DecryptMessage(It.IsAny<Message>(), viewModel.Key)).Returns(messageValue);
-            mockRepository.Setup(e => e.FindByIdAsync(viewModel.Code)).Returns(Task.FromResult(new Message()));
+            mockRepository.Setup(e => e.FindByCodeAsync(viewModel.Code)).Returns(Task.FromResult(new Message()));
             HomeController controller = new HomeController(mockEncryptor.Object, mockRepository.Object);
 
             // Act
@@ -116,7 +116,7 @@ namespace EncryptMessage.Test
             // Assert
             Assert.NotNull(result);
             mockEncryptor.Verify(e => e.DecryptMessage(It.IsAny<Message>(), It.IsAny<string>()), Times.Never());
-            mockRepository.Verify(r => r.FindByIdAsync(It.IsAny<string>()), Times.Never());
+            mockRepository.Verify(r => r.FindByCodeAsync(It.IsAny<string>()), Times.Never());
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace EncryptMessage.Test
             var mockEncryptor = new Mock<IMessageEncryptor>();
             var mockRepository = new Mock<IMessageRepository>();
             mockEncryptor.Setup(e => e.DecryptMessage(It.IsAny<Message>(), It.IsAny<string>())).Returns<string>(null);
-            mockRepository.Setup(e => e.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(new Message()));
+            mockRepository.Setup(e => e.FindByCodeAsync(It.IsAny<string>())).Returns(Task.FromResult(new Message()));
             HomeController controller = new HomeController(mockEncryptor.Object, mockRepository.Object);
 
             // Act

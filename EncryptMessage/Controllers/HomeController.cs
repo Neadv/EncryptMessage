@@ -30,7 +30,7 @@ namespace EncryptMessage.Controllers
                 RandomString randomString = new RandomString(6);
                 string id = randomString.Next();
 
-                message.Id = id;
+                message.Code = id;
                 await repository.AddMessageAsync(message);
 
                 return RedirectToAction(nameof(Success), new { Id = id });
@@ -40,7 +40,7 @@ namespace EncryptMessage.Controllers
 
         public async Task<IActionResult> Message(string id)
         {
-            return await repository.FindByIdAsync(id) == null
+            return await repository.FindByCodeAsync(id) == null
                    ? RedirectToAction(nameof(Create))
                    : View(new MessageViewModel { Code = id });
         }
@@ -51,7 +51,7 @@ namespace EncryptMessage.Controllers
             ModelState.Remove("Message");
             if (ModelState.IsValid)
             {
-                var message = await repository.FindByIdAsync(viewModel.Code);
+                var message = await repository.FindByCodeAsync(viewModel.Code);
                 if (message != null)
                 {
                     string messageValue = encryptor.DecryptMessage(message, viewModel.Key);

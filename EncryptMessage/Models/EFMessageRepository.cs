@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EncryptMessage.Models
@@ -20,9 +21,10 @@ namespace EncryptMessage.Models
             await dataContext.SaveChangesAsync();
         }
 
-        public async Task RemoveMessageByIdAsync(string id)
+        public async Task RemoveMessageByIdAsync(string code)
         {
-            dataContext.Messages.Remove(new Message { Id = id });
+            var message = await FindByCodeAsync(code);
+            dataContext.Messages.Remove(message);
             await dataContext.SaveChangesAsync();
         }
 
@@ -32,9 +34,9 @@ namespace EncryptMessage.Models
             await dataContext.SaveChangesAsync();
         }
 
-        public async Task<Message> FindByIdAsync(string id)
+        public async Task<Message> FindByCodeAsync(string code)
         {
-            return await dataContext.Messages.FindAsync(id);
+            return await dataContext.Messages.FirstOrDefaultAsync(m => m.Code == code);
         }
     }
 }
