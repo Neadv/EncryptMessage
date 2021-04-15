@@ -1,0 +1,34 @@
+﻿@model RegistrationViewModel
+@{
+    ViewBag.Title = "Sign up";
+}
+
+<h5 class="bg-primary text-white text-center p-2 my-2">Sign up</h5>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Registration" asp-controller="Account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username"></label>
+                <input class="form-control" asp-for="Username" placeholder="Enter an username" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input class="form-control" asp-for="Password" placeholder="Enter a password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Confirm password</label>
+                <input class="form-control" asp-for="ConfirmPassword" placeholder="Enter a password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_Validation" />
+}
