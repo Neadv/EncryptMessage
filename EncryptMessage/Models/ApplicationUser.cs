@@ -6,5 +6,7 @@ namespace EncryptMessage.Models
     public class ApplicationUser : IdentityUser
     {
         public List<Message> Messages { get; set; }
+
+        public List<AllowedUserMessages> AllowedMessages { get; set; }
     }
 }

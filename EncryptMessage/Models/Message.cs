@@ -24,5 +24,11 @@ namespace EncryptMessage.Models
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+
+        public bool IsPrivate { get; set; } = false;
+        public bool IsDisposable { get; set; } = false;
+        public bool lockoutOnFailure { get; set; } = false;
+
+        public List<AllowedUserMessages> AllowedUsers { get; set; }
     }
 }
