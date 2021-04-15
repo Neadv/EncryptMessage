@@ -44,14 +44,14 @@ namespace EncryptMessage.Controllers
         }
 
         [HttpGet]
-        public IActionResult Registration()
+        public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Registration(RegistrationViewModel registration)
+        public async Task<IActionResult> Register(RegistrationViewModel registration)
         {
             if (ModelState.IsValid)
             {

@@ -16,7 +16,7 @@
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
                 <ul class="navbar-nav mr-2">
                     <li class="nav-item active">
                         <a class="nav-link" asp-action="Create" asp-controller="Home">Home</a>
@@ -27,11 +27,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">About</a>
                     </li>
-                </ul>
-                <form class="form-inline" asp-controller="Home" asp-action="Message" method="get">
-                    <input class="form-control mr-sm-2" type="search" name="id" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-                </form>
+                    <li>
+                        <form class="form-inline my-2 my-lg-0" asp-controller="Home" asp-action="Message" method="get">
+                            <input class="form-control mr-sm-2" type="search" name="id" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                    </li>
+                </ul>       
+                <vc:login-widget />
             </div>
         </div>
     </nav>

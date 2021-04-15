@@ -1,0 +1,21 @@
+﻿@model string
+
+@if (Model == null)
+{
+    <a class="btn btn-link text-white" asp-action="Login" asp-controller="Account">Sign in</a>
+}
+else
+{
+<div class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+        @Model
+    </a>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">Messages</a>
+        <div class="dropdown-divider"></div>
+        <form asp-action="Logout" asp-controller="Account" method="post">
+            <input type="submit" value="Logout" class="dropdown-item"/>
+        </form>
+    </div>
+</div>
+}

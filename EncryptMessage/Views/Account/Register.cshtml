@@ -7,7 +7,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form asp-action="Registration" asp-controller="Account" method="post">
+        <form asp-action="Register" asp-controller="Account" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Username"></label>
@@ -24,8 +24,9 @@
                 <input class="form-control" asp-for="ConfirmPassword" placeholder="Enter a password" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Sign up</button>
         </form>
+        <div class="mt-2">Already registered? <a class="text-primary" asp-action="Login" asp-controller="Account">Click to Login</a></div>
     </div>
 </div>
 
