@@ -60,6 +60,11 @@ namespace EncryptMessage
                 endpoints.MapControllerRoute("message", "/{action=Create}/{id?}", new { Controller = "Home"} );
                 endpoints.MapDefaultControllerRoute();
             });
+
+            if (env.IsDevelopment())
+            {
+                app.SeedDatabase();
+            }
         }
     }
 }
