@@ -19,5 +19,9 @@ namespace EncryptMessage.Models
         [DataType(DataType.Password)]
         [MinLength(4)]
         public string Key { get; set; }
+
+        public bool IsPrivate { get; set; } = false;
+        public bool IsDisposable { get; set; } = false;
+        public bool lockoutOnFailure { get; set; } = false;
     }
 }

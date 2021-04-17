@@ -65,7 +65,7 @@ namespace EncryptMessage.Test
             var resultRedirect = (await controller.Message("654321")) as RedirectToActionResult;
 
             // Assert
-            var vm = resultView.Model as MessageViewModel;
+            var vm = resultView.Model as ViewMessage;
 
             Assert.NotNull(resultView);
             Assert.NotNull(resultRedirect);
@@ -80,7 +80,7 @@ namespace EncryptMessage.Test
         {
             // Arrange
             var messageValue = "Encrypted message";
-            var viewModel = new MessageViewModel
+            var viewModel = new ViewMessage
             {
                 Code = "123456",
                 Key = "secret"
@@ -95,7 +95,7 @@ namespace EncryptMessage.Test
             var result = (await controller.Message(viewModel)) as ViewResult;
 
             // Assert
-            var vm = result.Model as MessageViewModel;
+            var vm = result.Model as ViewMessage;
 
             Assert.NotNull(result);
             Assert.Equal(messageValue, vm.Message);
@@ -111,7 +111,7 @@ namespace EncryptMessage.Test
             controller.ModelState.AddModelError("Key", "Key is required");
 
             // Act
-            var result = (await controller.Message(new MessageViewModel())) as ViewResult;
+            var result = (await controller.Message(new ViewMessage())) as ViewResult;
 
             // Assert
             Assert.NotNull(result);
@@ -130,7 +130,7 @@ namespace EncryptMessage.Test
             HomeController controller = new HomeController(mockEncryptor.Object, mockRepository.Object);
 
             // Act
-            var result = (await controller.Message(new MessageViewModel())) as ViewResult;
+            var result = (await controller.Message(new ViewMessage())) as ViewResult;
 
             // Assert
             var vm = result.Model as MessageViewModel;

@@ -42,13 +42,12 @@ namespace EncryptMessage.Controllers
         {
             return await repository.FindByCodeAsync(id) == null
                    ? RedirectToAction(nameof(Create))
-                   : View(new MessageViewModel { Code = id });
+                   : View(new ViewMessage { Code = id });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Message(MessageViewModel viewModel)
+        public async Task<IActionResult> Message(ViewMessage viewModel)
         {
-            ModelState.Remove("Message");
             if (ModelState.IsValid)
             {
                 var message = await repository.FindByCodeAsync(viewModel.Code);
@@ -57,7 +56,7 @@ namespace EncryptMessage.Controllers
                     string messageValue = encryptor.DecryptMessage(message, viewModel.Key);
                     if (messageValue != null)
                     {
-                        return View(new MessageViewModel { Code = viewModel.Code, Message = messageValue });
+                        return View(new ViewMessage { Code = viewModel.Code, Message = messageValue });
                     }
                     ModelState.AddModelError("Key", "The entered key value is incorrect ");
                 }
