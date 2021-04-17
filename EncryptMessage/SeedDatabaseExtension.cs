@@ -40,8 +40,13 @@ namespace EncryptMessage
                 string key = configuration["SeedData:Messages:PublicMessage:Key"];
                 string code = configuration["SeedData:Messages:PublicMessage:Code"];
 
-                Message publicMessage = encryptor.EncryptMessage(value, key);
-                publicMessage.Code = code;
+                var result = encryptor.EncryptMessage(value, key);
+                var publicMessage = new Message
+                {
+                    Code = code,
+                    Value = result.Value,
+                    IV = result.IV
+                };
 
                 dataContext.Messages.Add(publicMessage);
 
@@ -51,10 +56,15 @@ namespace EncryptMessage
 
                 var admin = await userManager.FindByNameAsync(configuration["SeedData:Admin:Username"]);
 
-                Message privateMessage = encryptor.EncryptMessage(value, key);
-                privateMessage.Code = code;
-                privateMessage.ApplicationUser = admin;
-                privateMessage.IsPrivate = true;
+                result = encryptor.EncryptMessage(value, key);
+                var privateMessage = new Message
+                {
+                    Code = code,
+                    Value = result.Value,
+                    IV = result.IV,
+                    IsPrivate = true,
+                    ApplicationUser = admin
+                };
 
                 dataContext.Messages.Add(privateMessage);
 

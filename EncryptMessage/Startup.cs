@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EncryptMessage.Models;
+using EncryptMessage.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,8 @@ namespace EncryptMessage
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
 
             services.AddTransient<IMessageEncryptor, AesEncryptor>();
+            services.AddScoped<IMessageValidator, MessageValidator>();
+            services.AddScoped<IMessageMapper, MessageMapper>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

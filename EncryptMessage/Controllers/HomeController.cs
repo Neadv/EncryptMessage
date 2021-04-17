@@ -1,4 +1,5 @@
 ﻿using EncryptMessage.Models;
+using EncryptMessage.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,11 +9,16 @@ namespace EncryptMessage.Controllers
     {
         private readonly IMessageEncryptor encryptor;
         private readonly IMessageRepository repository;
+        private readonly IMessageValidator validator;
+        private readonly IMessageMapper mapper;
 
-        public HomeController(IMessageEncryptor encryptor, IMessageRepository repository)
+        public HomeController(IMessageEncryptor encryptor, IMessageRepository repository, 
+            IMessageValidator validator, IMessageMapper mapper)
         {
             this.encryptor = encryptor;
             this.repository = repository;
+            this.validator = validator;
+            this.mapper = mapper;
         }
 
         public IActionResult Create()
@@ -25,15 +31,14 @@ namespace EncryptMessage.Controllers
         {
             if (ModelState.IsValid)
             {
-                var message = encryptor.EncryptMessage(messageViewModel.Message, messageViewModel.Key);
+                var message = await mapper.FromViewModelAsync(messageViewModel);
+                var encrypt = encryptor.EncryptMessage(messageViewModel.Message, messageViewModel.Key);
+                message.Value = encrypt.Value;
+                message.IV = encrypt.IV;
 
-                RandomString randomString = new RandomString(6);
-                string id = randomString.Next();
-
-                message.Code = id;
                 await repository.AddMessageAsync(message);
 
-                return RedirectToAction(nameof(Success), new { Id = id });
+                return RedirectToAction(nameof(Success), new { Id = message.Code });
             }
             return View();
         }
@@ -53,12 +58,28 @@ namespace EncryptMessage.Controllers
                 var message = await repository.FindByCodeAsync(viewModel.Code);
                 if (message != null)
                 {
-                    string messageValue = encryptor.DecryptMessage(message, viewModel.Key);
-                    if (messageValue != null)
+                    var result = await validator.ValidateAsync(message, User?.Identity.Name);
+                    if (result.Succeeded)
                     {
-                        return View(new ViewMessage { Code = viewModel.Code, Message = messageValue });
+                        string messageValue = encryptor.DecryptMessage(message, viewModel.Key);
+                        if (messageValue != null)
+                        {
+                            if (message.IsDisposable)
+                                await repository.RemoveMessageByIdAsync(message.Code);
+
+                            return View(new ViewMessage { Code = viewModel.Code, Message = messageValue });
+                        }            
+                        if(message.LockoutOnFailure)
+                        {
+                            message.IsLockout = true;
+                            await repository.UpdateMessageAsync(message);
+                        }
+                        ModelState.AddModelError("Key", "The entered key value is incorrect ");
                     }
-                    ModelState.AddModelError("Key", "The entered key value is incorrect ");
+                    else
+                    {
+                        ModelState.AddModelError("", result.Description);
+                    }
                 }
             }
             return View();

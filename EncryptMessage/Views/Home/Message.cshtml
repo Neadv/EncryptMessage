@@ -9,7 +9,7 @@
     <div class="card-body">
         <h5 class="card-title">@(isEnter ? "Enter a secret key": "Encrypted Message")</h5>
         <form asp-action="Message" method="post">
-            <div asp-validation-summary="ModelOnly"></div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
             <input asp-for="Code" type="hidden">
             @if (!isEnter)
             {

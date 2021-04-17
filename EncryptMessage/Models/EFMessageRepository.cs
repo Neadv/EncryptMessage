@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace EncryptMessage.Models
@@ -36,7 +38,7 @@ namespace EncryptMessage.Models
 
         public async Task<Message> FindByCodeAsync(string code)
         {
-            return await dataContext.Messages.FirstOrDefaultAsync(m => m.Code == code);
+            return await dataContext.Messages.Include(m => m.AllowedUsers).FirstOrDefaultAsync(m => m.Code == code);
         }
     }
 }
