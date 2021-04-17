@@ -27,7 +27,8 @@ namespace EncryptMessage.Models
 
         public bool IsPrivate { get; set; } = false;
         public bool IsDisposable { get; set; } = false;
-        public bool lockoutOnFailure { get; set; } = false;
+        public bool LockoutOnFailure { get; set; } = false;
+        public bool IsLockout { get; set; } = false;
 
         public List<AllowedUserMessages> AllowedUsers { get; set; }
     }
