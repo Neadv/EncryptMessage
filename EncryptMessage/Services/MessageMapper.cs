@@ -1,6 +1,7 @@
 ﻿using EncryptMessage.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -29,6 +30,13 @@ namespace EncryptMessage.Services
                     message.IsDisposable = viewModel.IsDisposable;
                     message.IsPrivate = viewModel.IsPrivate;
                     message.LockoutOnFailure = viewModel.lockoutOnFailure;
+
+                    message.AllowedUsers = new List<AllowedUserMessages>();
+                    foreach (var username in viewModel.Users)
+                    {
+                        var user = await userManager.FindByNameAsync(username);
+                        message.AllowedUsers.Add(new AllowedUserMessages { Message = message, User = user });
+                    }
                 }
             }
 

@@ -6,6 +6,7 @@ namespace EncryptMessage.Services
     public interface IMessageValidator
     {
         Task<MessageValidatorResult> ValidateAsync(Message message, string username);
+        Task<MessageValidatorResult> ValidateCreationAsync(MessageViewModel viewModel);
     }
 
     public class MessageValidatorResult

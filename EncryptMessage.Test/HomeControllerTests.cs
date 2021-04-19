@@ -37,13 +37,15 @@ namespace EncryptMessage.Test
             var mockEncryptor = new Mock<IMessageEncryptor>();
             var mockRepository = new Mock<IMessageRepository>();
             var mockMapper = new Mock<IMessageMapper>();
+            var mockValidator = new Mock<IMessageValidator>();
 
             Message message = new Message { Code = "123456" };
             MessageViewModel viewModel = new MessageViewModel { Key = "Key", Message = "Message" };
 
             mockMapper.Setup(m => m.FromViewModelAsync(viewModel)).Returns(Task.FromResult(message));
             mockEncryptor.Setup(e => e.EncryptMessage(viewModel.Message, viewModel.Key)).Returns(new Message());
-            HomeController controller = new HomeController(mockEncryptor.Object, mockRepository.Object, null, mockMapper.Object);
+            mockValidator.Setup(e => e.ValidateCreationAsync(viewModel)).ReturnsAsync(MessageValidatorResult.SucceededResult);
+            HomeController controller = new HomeController(mockEncryptor.Object, mockRepository.Object, mockValidator.Object, mockMapper.Object);
 
             // Act
             var result = (await controller.Create(viewModel)) as RedirectToActionResult;

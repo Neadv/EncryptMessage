@@ -12,7 +12,7 @@ namespace EncryptMessage.Controllers
         private readonly IMessageValidator validator;
         private readonly IMessageMapper mapper;
 
-        public HomeController(IMessageEncryptor encryptor, IMessageRepository repository, 
+        public HomeController(IMessageEncryptor encryptor, IMessageRepository repository,
             IMessageValidator validator, IMessageMapper mapper)
         {
             this.encryptor = encryptor;
@@ -31,14 +31,19 @@ namespace EncryptMessage.Controllers
         {
             if (ModelState.IsValid)
             {
-                var message = await mapper.FromViewModelAsync(messageViewModel);
-                var encrypt = encryptor.EncryptMessage(messageViewModel.Message, messageViewModel.Key);
-                message.Value = encrypt.Value;
-                message.IV = encrypt.IV;
+                var result = await validator.ValidateCreationAsync(messageViewModel);
+                if (result.Succeeded)
+                {
+                    var message = await mapper.FromViewModelAsync(messageViewModel);
+                    var encrypt = encryptor.EncryptMessage(messageViewModel.Message, messageViewModel.Key);
+                    message.Value = encrypt.Value;
+                    message.IV = encrypt.IV;
 
-                await repository.AddMessageAsync(message);
+                    await repository.AddMessageAsync(message);
 
-                return RedirectToAction(nameof(Success), new { Id = message.Code });
+                    return RedirectToAction(nameof(Success), new { Id = message.Code });
+                }
+                ModelState.AddModelError("", result.Description);
             }
             return View();
         }
@@ -68,8 +73,8 @@ namespace EncryptMessage.Controllers
                                 await repository.RemoveMessageByIdAsync(message.Code);
 
                             return View(new ViewMessage { Code = viewModel.Code, Message = messageValue });
-                        }            
-                        if(message.LockoutOnFailure)
+                        }
+                        if (message.LockoutOnFailure)
                         {
                             message.IsLockout = true;
                             await repository.UpdateMessageAsync(message);

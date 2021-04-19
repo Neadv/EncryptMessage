@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EncryptMessage.Models
 {
@@ -9,5 +10,6 @@ namespace EncryptMessage.Models
         public bool IsPrivate { get; set; }
         public bool IsDisposable { get; set; }
         public bool LookoutOnFailure { get; set; }
+        public List<string> Users { get; set; } = new List<string>();
     }
 }

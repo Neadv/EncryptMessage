@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EncryptMessage.Controllers
@@ -55,6 +56,15 @@ namespace EncryptMessage.Controllers
                     LookoutOnFailure = message.LockoutOnFailure,
                     IsPrivate = message.IsPrivate
                 };
+                if (message.AllowedUsers != null)
+                {
+                    foreach (var allowedUser in message.AllowedUsers)
+                    {
+                        var u = await userManager.FindByIdAsync(allowedUser.UserId);
+                        if (u != null)
+                            viewModel.Users.Add(u.UserName);
+                    }
+                }
                 return View(viewModel);
             }
             return RedirectToAction(nameof(Messages));
@@ -72,6 +82,18 @@ namespace EncryptMessage.Controllers
                     message.IsPrivate = viewModel.IsPrivate;
                     message.IsDisposable = viewModel.IsDisposable;
                     message.LockoutOnFailure = viewModel.LookoutOnFailure;
+
+                    if (message.AllowedUsers != null)
+                    {
+                        message.AllowedUsers.Clear();
+                        foreach (var allowedUser in viewModel.Users.Distinct())
+                        {
+                            var u = await userManager.FindByNameAsync(allowedUser);
+                            if (u != null)
+                                message.AllowedUsers.Add(new AllowedUserMessages { Message = message, User = u });
+                        }
+                    }
+
                     await repository.UpdateMessageAsync(message);
                 }
             }
@@ -101,6 +123,14 @@ namespace EncryptMessage.Controllers
                 }
             }
             return RedirectToAction(nameof(Messages));
+        }
+
+        [HttpPost]
+        public async Task<bool> CheckUser([FromBody] string username)
+        {
+            if (username != null)
+                return await userManager.FindByNameAsync(username) != null;
+            return false;
         }
     }
 }

@@ -35,5 +35,17 @@ namespace EncryptMessage.Services
             }
             return MessageValidatorResult.SucceededResult;
         }
+
+        public async Task<MessageValidatorResult> ValidateCreationAsync(MessageViewModel viewModel)
+        {
+            var usernames = viewModel.Users.Distinct();
+            foreach (var u in usernames)
+            {
+                var user = await userManager.FindByNameAsync(u);
+                if (u == null)
+                    return new MessageValidatorResult { Succeeded = false, Description = $"There are no users with '{u}' username" };
+            }
+            return MessageValidatorResult.SucceededResult;
+        }
     }
 }
