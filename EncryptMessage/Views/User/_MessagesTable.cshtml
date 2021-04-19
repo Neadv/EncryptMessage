@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Message>
+<table class="table table-bordered table-striped table-sm">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Private</th>
+            <th>Disposable</th>
+            <th>Lockout on failure</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model)
+        {
+            <tr class="@(message.IsLockout ? "bg-danger text-white": "")">
+                <td>@message.Code</td>
+                <td>@message.IsPrivate</td>
+                <td>@message.IsDisposable</td>
+                <td>@message.LockoutOnFailure</td>
+                <td class="text-center">
+                    @if (!message.IsLockout)
+                    {
+                        <a class="btn btn-primary btn-sm" asp-action="Message" asp-controller="Home" asp-route-id="@message.Code">View</a>
+                        <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="User" asp-route-id="@message.Code">Edit</a>
+                        <form asp-action="RemoveMessage" class="form-inline d-inline" method="post">
+                            <input type="hidden" name="Code" value="@message.Code" />
+                            <input type="submit" class="btn btn-danger btn-sm" value="Remove" />
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-warning" asp-action="Unlock" asp-route-id="@message.Code">Unlock</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

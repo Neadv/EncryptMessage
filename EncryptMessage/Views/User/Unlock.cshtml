@@ -1,0 +1,25 @@
+﻿@model ViewMessage
+@{
+    ViewBag.Title = "Unlock Message";
+}
+
+<h5 class="bg-danger text-white text-center m-2 p-2">Unlock Message - @Model.Code</h5>
+<div class="card m-2">
+    <div class="card-body">
+        <h5 class="card-title">Enter a secret key</h5>
+        <form asp-action="Unlock" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <input asp-for="Code" type="hidden">
+            <div class="form-group">
+                <label asp-for="Key">Secret Key:</label>
+                <input class="form-control" asp-for="Key" placeholder="Enter a secret key">
+                <span asp-validation-for="Key" class="text-danger"></span>
+            </div>
+            <button class="btn btn-warning" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_Validation" />
+}

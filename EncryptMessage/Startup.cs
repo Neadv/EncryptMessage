@@ -60,6 +60,7 @@ namespace EncryptMessage
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("profile", "/Profile/{action=Messages}/{id?}", new { Controller = "User" });
                 endpoints.MapControllerRoute("message", "/{action=Create}/{id?}", new { Controller = "Home"} );
                 endpoints.MapDefaultControllerRoute();
             });

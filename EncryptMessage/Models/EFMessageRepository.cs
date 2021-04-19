@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -39,6 +40,11 @@ namespace EncryptMessage.Models
         public async Task<Message> FindByCodeAsync(string code)
         {
             return await dataContext.Messages.Include(m => m.AllowedUsers).FirstOrDefaultAsync(m => m.Code == code);
+        }
+
+        public async Task<IEnumerable<Message>> FindByExpressionAsync(Expression<Func<Message, bool>> expression)
+        {
+            return await dataContext.Messages.Where(expression).ToListAsync();
         }
     }
 }

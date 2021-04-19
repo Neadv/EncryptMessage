@@ -1,0 +1,33 @@
+﻿@model EditMessageViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h5 class="bg-warning text-white text-center p-2 m-2">Edit - @Model.Code</h5>
+<div class="card m-2">
+    <div class="card-body">
+        <h5 class="card-title">Create a secret message</h5>
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly"></div>
+            <input type="hidden" asp-for="Code" />
+            <div class="form-check form-group">
+                <input class="form-check-input" asp-for="IsPrivate" />
+                <label class="form-check-label" asp-for="IsPrivate">Private</label>
+            </div>
+            <div class="form-check form-group">
+                <input class="form-check-input" asp-for="IsDisposable" />
+                <label class="form-check-label" asp-for="IsDisposable">Disposable</label>
+            </div>
+            <div class="form-check form-group">
+                <input class="form-check-input" asp-for="LookoutOnFailure" />
+                <label class="form-check-label" asp-for="LookoutOnFailure">Lock out on failure</label>
+            </div>
+            <button class="btn btn-warning" type="submit">Submit</button>
+            <a class="btn btn-secondary" asp-action="Messages">Back</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_Validation" />
+}
